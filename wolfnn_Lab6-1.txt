@@ -1,0 +1,93 @@
+Part 1: Primary Keys and Indexes
+Alter table PARENT
+add constraint pk_child_id primary key (Child_ID);
+
+CREATE Index Houses ON HOUSEHOLD (zip);
+
+
+Part 2: Auto-increment
+CREATE Sequence Pet_ID
+Minvalue 1
+Start with 7
+Increment by 1
+Cache 10;
+
+Insert Into Pet (Pet_ID,PName,Type,Fur_Type,Year_Born,House_In)
+Values (Pet_ID.nextval,'Findlay','Dog','Short_Hair',2021,1);
+
+
+Part 3: SQL
+1. Select Distinct City FROM HOUSEHOLD;
+
+CITY
+--------------------------------------------------
+Cincinnati
+Akron
+Chicago
+Columbus
+Loveland
+
+2. SELECT Member_ID, Name, Birthday,Phone_Num
+FROM MEMBER 
+Where Lives_In IN 
+(SELECT House_In FROM PET Where PName='Tucker' AND Type='Dog');
+
+ MEMBER_ID NAME                                               BIRTHDAY
+---------- -------------------------------------------------- ---------
+PHONE_NUM
+------------
+         3 Anna Patel                                         12-AUG-23
+330-949-2522
+
+         4 Mary Burbank                                       15-FEB-22
+330-512-9725
+
+3. Select * FROM
+(SELECT Address_num, Street, City, State
+FROM HOUSEHOLD
+Order By City)
+WHERE rownum<=3;
+
+ADDRESS_NU STREET
+---------- --------------------------------------------------
+CITY                                               ST
+-------------------------------------------------- --
+102        2nd Ave.
+Akron                                              OH
+
+123        Michigan Ave.
+Chicago                                            IL
+
+999        Ohio St.
+Cincinnati                                         OH
+
+4. SELECT Name
+FROM MEMBER M, HOUSEHOLD H
+Where M.Lives_In=H.House_ID
+AND H.Address_num=444
+UNION
+SELECT PName
+FROM Pet P, HOUSEHOLD H
+Where P.House_In=H.House_ID
+AND H.Address_num=444;
+
+NAME
+--------------------------------------------------
+Alexis Grant
+Bella
+Findlay
+Jose Grant
+Mary Hunter
+Milo
+
+5. SELECT Name FROM MEMBER
+Where Lives_In NOT IN 
+(Select House_In FROM PET);
+
+NAME
+--------------------------------------------------
+Ian Grant
+Aaron Piper
+Samuel Grant
+Larry Grant
+Lucy Harlow
