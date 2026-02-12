@@ -1,9 +1,9 @@
-## Information-Systems-Projects
+# Information-Systems-Projects
 
 The application of skills I have learned pursuing my degree in Information Systems
 Classes:
 
-# IS 3030 Database Design 
+## IS 3030 Database Design 
 Using Access, Visio, and Oracle to develop SQL relational databases
 
 Learning:
@@ -13,7 +13,7 @@ Learning:
 4. Normalization of Relations
 5. Relational Database Management Systems and Structured Query Language (SQL) 
 
-# IS 3050 App development
+## IS 3050 App development
 Building functional, data-driven applications and also learn the foundations of programming for both procedural and object-oriented programming supported by AI based tools.
 
 Learning:
