@@ -1,0 +1,203 @@
+Part 1B:
+
+ALTER TABLE LOCATION DROP CONSTRAINT CK_DEPLOC;
+
+ALTER TABLE LOCATION
+ADD CONSTRAINT CK_DEPLOC CHECK (Location IN ('SEATTLE', 'ORLANDO', 'CLEVELAND', 'CINCINNATI', 'MIAMI'));
+
+INSERT INTO LOCATION (Location, Loc_size, State)
+VALUES ('MIAMI', 100, 'FL');
+
+
+ALTER TABLE DEPARTMENT DROP CONSTRAINT CK_DEPNO;
+
+ALTER TABLE DEPARTMENT
+ADD CONSTRAINT CK_DEPNO CHECK (Dept_no BETWEEN 1 AND 20);
+
+ALTER TABLE DEPARTMENT DROP CONSTRAINT CK_DEPNAME;
+
+Alter TABLE DEPARTMENT DROP CONSTRAINT fk_emp2;
+
+ALTER TABLE DEPARTMENT
+ADD CONSTRAINT CK_DEPNAME CHECK (Dept_name IN ('ADMINISTRATION', 'HEADQUARTERS', 'PRODUCTION', 'R_and_D'));
+
+INSERT INTO DEPARTMENT (Dept_name, Dept_no, Mgr_Start_date, Mgrssno)
+VALUES ('R_and_D', 18,'23-JAN-24', '357122832')
+
+INSERT INTO Department_Location (Dnum, Dep_Location)
+VALUES (18, 'MIAMI');
+
+
+Alter Table employee drop constraint ck_sal;
+
+ALTER TABLE EMPLOYEE
+Add constraint ck_sal check (Salary between 30000 and 300000);
+
+INSERT INTO EMPLOYEE (Ssno, Last_name, Mi, First_name, Gender, Bdate, Address, Salary, Supssno, Dno)
+VALUES ('357122832', 'SMYTH', 'H', 'SAM', 'M', '25-Dec-76', 
+'859, Brickell Way, Miami, FL', 270000, '666884444', 18);
+
+
+ALTER TABLE PROJECT DROP CONSTRAINT CK_PROJ_NO;
+
+alter table project
+add constraint CK_PROJ_NO CHECK (PROJ_NO between 1 and 80);
+
+INSERT INTO PROJECT (Proj_name, Proj_no, Dnumb)
+VALUES ('RESEARCH', 51, 18);
+
+
+ALTER TABLE WORKS_ON DROP CONSTRAINT CK_WORKHRS;
+
+ALTER TABLE WORKS_ON
+ADD CONSTRAINT CK_WORKHRS CHECK (WORK_HRS <= 90);
+
+INSERT INTO WORKS_ON (Essno, Pno, Work_hrs)
+VALUES ('357122832', 51, 89);
+
+
+INSERT INTO DEPENDENT (Essno, Dependent_nm, Dep_gender, Dep_bdate, Related_how)
+VALUES ('357122832', 'MIKE', 'M', '29-May-14', 'SON');
+INSERT INTO DEPENDENT (Essno, Dependent_nm, Dep_gender, Dep_bdate, Related_how)
+VALUES ('357122832', 'MOLLY', 'F', '23-Jan-20', 'DAUGHTER');
+INSERT INTO DEPENDENT (Essno, Dependent_nm, Dep_gender, Dep_bdate, Related_how)
+VALUES ('357122832', 'JANE', 'F', '16-Jan-77', 'SPOUSE');
+
+---------------------------------------------------PART 2:------------------------------------------------------
+
+QUERY 1
+
+SELECT E.FIRST_NAME, E.MI, E.LAST_NAME, E.BDATE, E.ADDRESS, E.SSNO, D.DEPENDENT_NM
+FROM EMPLOYEE E LEFT OUTER JOIN DEPENDENT D
+ON E.SSNO = D.ESSNO;
+
+RESULT
+FIRST_NAME           M LAST_NAME            BDATE     ADDRESS                                  SSNO      DEPENDENT_NM
+-------------------- - -------------------- --------- ---------------------------------------- --------- ---------------
+PAUL                 B MCCARTNEY            25-DEC-78 731,                                     123456789 ALICE
+                                                      FONDREN, WACO, TX
+
+PAUL                 B MCCARTNEY            25-DEC-78 731,                                     123456789 ELIZABETH
+                                                      FONDREN, WACO, TX
+
+PAUL                 B MCCARTNEY            25-DEC-78 731,                                     123456789 MICHAEL
+                                                      FONDREN, WACO, TX
+
+FRANK                T WONG                 25-NOV-78 638,                                     222556666 JOY
+                                                      VOSS, CLEVELAND, OH
+
+FIRST_NAME           M LAST_NAME            BDATE     ADDRESS                                  SSNO      DEPENDENT_NM
+-------------------- - -------------------- --------- ---------------------------------------- --------- ---------------
+
+FRANK                T WONG                 25-NOV-78 638,                                     222556666 SARAH
+                                                      VOSS, CLEVELAND, OH
+
+SAM                  H SMYTH                25-DEC-76 859, Brickell Way, Miami, FL             357122832 JANE
+SAM                  H SMYTH                25-DEC-76 859, Brickell Way, Miami, FL             357122832 MIKE
+SAM                  H SMYTH                25-DEC-76 859, Brickell Way, Miami, FL             357122832 MOLLY
+JENNIFER             S SMITH                25-JUL-78 2912, BERRY, CINCINNATI, OH              987654321 BILL
+AHMAD                V JABBAR               25-JUN-78 980,                                     987987987
+                                                      CALHOUN, CINCINNATI, OH
+
+
+FIRST_NAME           M LAST_NAME            BDATE     ADDRESS                                  SSNO      DEPENDENT_NM
+-------------------- - -------------------- --------- ---------------------------------------- --------- ---------------
+JAMES                E RUTHERFORD           25-AUG-78 3321, CASTLE, SPRING, TX                 777211234
+JOYCE                A ENGLISH              25-OCT-78 5631,                                    453453453
+                                                      RICE, ORLANDO, FL
+
+JANE                 B GOMEZ                25-SEP-78 975,                                     666884444
+                                                      FIREOAK, HUMBLE, TX
+-----------------------------------------------------------------------------------------------------------------------
+QUERY 2
+
+SELECT E.SSNO
+FROM EMPLOYEE E LEFT OUTER JOIN DEPENDENT D
+ON E.SSNO = D.ESSNO
+WHERE D.ESSNO IS NULL;
+
+RESULT
+SELECT E.Ssno
+
+FROM EMPLOYEE E
+
+LEFT OUTER JOIN DEPENDENT D
+
+ON E.Ssno = D.Essno
+
+WHERE D.Essno IS NULL;
+---------------------------------------------------------------------------------------------------------------
+QUERY 3
+
+SELECT E.SSNO 
+FROM EMPLOYEE E
+WHERE E.SSNO 
+IN
+(SELECT D.MGRSSNO FROM DEPARTMENT D);
+
+RESULT
+SSNO
+---------
+222556666
+357122832
+777211234
+987654321
+----------------------------------------------------------------------------------------------------------------------
+QUERY 4
+SELECT E.FIRST_NAME, E.LAST_NAME, E.ADDRESS, D1.DEPT_NAME AS MANAGED_DEPARTMENT, D2.DEPENDENT_NM AS DEPENDENT_NAME
+FROM EMPLOYEE E LEFT OUTER JOIN DEPARTMENT D1
+ON E.SSNO = D1.MGRSSNO LEFT OUTER JOIN DEPENDENT D2
+ON E.SSNO = D2.ESSNO;
+
+RESULT
+FIRST_NAME           LAST_NAME            ADDRESS                                  MANAGED_DEPARTM DEPENDENT_NAME
+-------------------- -------------------- ---------------------------------------- --------------- ---------------
+PAUL                 MCCARTNEY            731,                                                     ALICE
+                                          FONDREN, WACO, TX
+
+PAUL                 MCCARTNEY            731,                                                     ELIZABETH
+                                          FONDREN, WACO, TX
+
+PAUL                 MCCARTNEY            731,                                                     MICHAEL
+                                          FONDREN, WACO, TX
+
+FRANK                WONG                 638,                                     PRODUCTION      JOY
+                                          VOSS, CLEVELAND, OH
+
+FIRST_NAME           LAST_NAME            ADDRESS                                  MANAGED_DEPARTM DEPENDENT_NAME
+-------------------- -------------------- ---------------------------------------- --------------- ---------------
+
+FRANK                WONG                 638,                                     PRODUCTION      SARAH
+                                          VOSS, CLEVELAND, OH
+
+SAM                  SMYTH                859, Brickell Way, Miami, FL             R_and_D         JANE
+SAM                  SMYTH                859, Brickell Way, Miami, FL             R_and_D         MIKE
+SAM                  SMYTH                859, Brickell Way, Miami, FL             R_and_D         MOLLY
+JENNIFER             SMITH                2912, BERRY, CINCINNATI, OH              ADMINISTRATION  BILL
+AHMAD                JABBAR               980,
+                                          CALHOUN, CINCINNATI, OH
+
+
+FIRST_NAME           LAST_NAME            ADDRESS                                  MANAGED_DEPARTM DEPENDENT_NAME
+-------------------- -------------------- ---------------------------------------- --------------- ---------------
+JAMES                RUTHERFORD           3321, CASTLE, SPRING, TX                 HEADQUARTERS
+JOYCE                ENGLISH              5631,
+                                          RICE, ORLANDO, FL
+
+JANE                 GOMEZ                975,
+                                          FIREOAK, HUMBLE, TX
+-------------------------------------------------------------------------------------------------------------------------
+QUERY 5
+
+ SELECT DISTINCT D.DEPENDENT_NM
+ FROM DEPENDENT D JOIN WORKS_ON W
+ ON D.ESSNO = W.ESSNO JOIN PROJECT P
+ ON W.PNO = P.PROJ_NO
+ WHERE P.PROJ_NAME = 'PRODUCT A';
+ 
+ RESULT
+DEPENDENT_NM
+---------------
+ALICE
+ELIZABETH
+MICHAEL
