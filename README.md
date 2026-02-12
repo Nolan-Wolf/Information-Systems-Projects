@@ -4,7 +4,7 @@ The application of skills I have learned pursuing my degree in Information Syste
 Classes:
 
 ## IS 3030 Database Design 
-Using Access, Visio, and Oracle to develop SQL relational databases
+An introduction to the use and design of databases to store, manipulate and query data.
 
 Learning:
 1. Concepts of Data Management and Database Systems
